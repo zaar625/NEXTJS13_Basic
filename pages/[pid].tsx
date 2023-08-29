@@ -12,9 +12,20 @@ function ProductDetailPage(props:any) {
     )
 }
 
+export async function getStaticPaths() {
+ return{
+    paths:[
+        {params :{pid :'p1'}},
+        {params :{pid :'p2'}},
+        {params :{pid :'p3'}},
+    ],
+    fallback:false
+ }   
+}
+
 export async function getStaticProps(context:any) {
     console.log(context);
-    const {params } = context;
+    const {params} = context;
 
     const productId = params.pid;
 
