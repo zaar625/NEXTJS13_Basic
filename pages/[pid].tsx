@@ -5,9 +5,9 @@ function ProductDetailPage(props:any) {
 
     const {loadedProduct} = props;
 
-    // if(!loadedProduct) {
-    //     return <p>Loading...</p>
-    // }
+    if(!loadedProduct) {
+        return <p>Loading...</p>
+    }
 
     return (
         <>
@@ -17,29 +17,28 @@ function ProductDetailPage(props:any) {
     )
 }
 
-export async function getStaticPaths() {
- return{
-    paths:[
-        {params :{pid :'p1'}},
-        // {params :{pid :'p2'}},
-        // {params :{pid :'p3'}},
-    ],
-    fallback:'blocking'
- }   
-}
-
-export async function getStaticProps(context:any) {
-    console.log(context);
-    const {params} = context;
-
-    const productId = params.pid;
-
+async function getData() {
     const filePath = path.join(process.cwd(), 'data','dummy-backend.json'); 
     const json =  await fs.readFile(filePath);
     const jsonData = json.toString('utf-8')
     const data = JSON.parse(jsonData);
 
+    return data;
+}
+
+
+export async function getStaticProps(context:any) {
+    
+    const {params} = context;
+    const productId = params.pid;
+
+    const data = await getData();
+
     const product = data.products.find((product:any) => product.id === productId);
+
+    if(!product){
+        return {notFound:true}
+    }
 
     return {
         props:{
@@ -47,4 +46,19 @@ export async function getStaticProps(context:any) {
         }
     }
 }
+
+export async function getStaticPaths() {
+
+    const data = await getData();
+
+    const ids = data.products.map(((product:any) => product.id))
+
+    const pathWithparams = ids.map((id:any) => ({params:{pid:id}}))
+
+ return{
+    paths:pathWithparams,
+    fallback:true
+ }   
+}
+
 export default ProductDetailPage
