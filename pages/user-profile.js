@@ -6,6 +6,7 @@ function UserProfilePage(props) {
 }
 
 export async function getServerSideProps(context) {
+    console.log(context.params)
     console.log('실행')
     return {
         props:{
