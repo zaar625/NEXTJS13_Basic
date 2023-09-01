@@ -1,3 +1,4 @@
+
 import StartingPageContent from '../components/starting-page/starting-page';
 
 function HomePage() {
@@ -5,3 +6,4 @@ function HomePage() {
 }
 
 export default HomePage;
+
